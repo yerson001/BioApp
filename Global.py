@@ -207,25 +207,31 @@ class NeedlemanWunsch:
             alignments.append(cadena_temp)
         score = matriz[n - 1][m - 1]
         letters = self.alineamientos(lista_alineamientos, lista2, str2, str1)
-        """
-        print("MATRIZ: ")
-        print(matriz)
-        print("SCORE : ", score)
-        print("ALINEAMIENTOS # : ", len(lista_alineamientos))
-        print("ALINEAMIENTOS ", lista_alineamientos)
-        print(alignments)
-        print(letters)
-        """
-        return score,len(lista_alineamientos),lista_caminos
+
+        #print("MATRIZ: ")
+        #print(matriz)
+        #print("SCORE : ", score)
+        #print("ALINEAMIENTOS # : ", len(lista_alineamientos))
+        #print("ALINEAMIENTOS ", lista_alineamientos)
+        #print(alignments)
+        #print(letters)
+
+        return score,len(lista_alineamientos),alignments,letters
 
 
 if __name__ == '__main__':
     seq1 = '-' + 'AGC'
     seq2 = '-' + 'AAAC'
     nw = NeedlemanWunsch()
-    score,num,m = nw.run(seq1, seq2)
+    score,num,n,m = nw.run(seq1, seq2)
 
-    print(score, " \n ",num, " \n ",m)
+    print(score, "\n",num,"\n",n,"\n",m)
+
+    print(n[0][0])
+
+    print(len(n[0]))
+
+    print(len(n))
 
 
 
