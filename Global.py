@@ -232,8 +232,3 @@ if __name__ == '__main__':
     print(len(n[0]))
 
     print(len(n))
-
-
-
-
-
