@@ -114,4 +114,4 @@ sw = SmithWaterman()
 
 n,m = sw.run_SW(str1,str2)
 
-print(n,"  ",m)
+#print(n,"  ",m)

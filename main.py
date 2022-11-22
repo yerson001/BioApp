@@ -38,7 +38,7 @@ class StartUpPage(tk.Canvas):
                   command=lambda: master.switch_Canvas(PageOne)).grid(column=0, row=1)
         tk.Button(self, text="Smith-Waterman",
                   command=lambda: master.switch_Canvas(PageTwo)).grid(column=0, row=2)
-        tk.Button(self, text="Satart-Aligment",
+        tk.Button(self, text="Start-Aligment",
                   command=lambda: master.switch_Canvas(PageThree)).grid(column=0, row=3)
 
 
@@ -254,25 +254,17 @@ class PageThree(tk.Frame):  # Sub-lcassing tk.Frame
         AdjustPositionx = 0
         AdjustPositiony = -30
 
-        tittleNW = tk.Label(self, text='Smith-Waterman')
+        tittleNW = tk.Label(self, text='Start-Aligment')
         tittleNW.config(font=('helvetica', 14))
         self.canvas.create_window(300, 25, window=tittleNW)
 
         Seq1 = tk.Label(self, text='Secuencia a:')
         Seq1.config(font=('helvetica', 10))
-        self.canvas.create_window(100, 100 + AdjustPositiony, window=Seq1)
+        self.canvas.create_window(90, 100 + AdjustPositiony, window=Seq1)
 
-        entry1 = tk.Entry(self)
-        self.canvas.create_window(
-            250, 100 + AdjustPositiony, window=entry1)
+        entry1 = tk.Entry(self,width=40)
+        self.canvas.create_window(300, 100 + AdjustPositiony, window=entry1)
 
-        Seq2 = tk.Label(self, text='Secuencia b:')
-        Seq2.config(font=('helvetica', 10))
-        self.canvas.create_window(100, 150 + AdjustPositiony, window=Seq2)
-
-        entry2 = tk.Entry(self)
-        self.canvas.create_window(
-            250, 150 + AdjustPositiony, window=entry2)
 
         numfont = 0
 
@@ -285,7 +277,7 @@ class PageThree(tk.Frame):  # Sub-lcassing tk.Frame
         score.config(font=('helvetica', 10 + numfont))
         self.canvas.create_window(90, 270, window=score)
 
-        tittleNW = tk.Label(self, text='Num Alig: ')
+        tittleNW = tk.Label(self, text='Cadena: ')
         tittleNW.config(font=('helvetica', 10 + numfont))
         self.canvas.create_window(200, 250, window=tittleNW)
 
@@ -293,7 +285,7 @@ class PageThree(tk.Frame):  # Sub-lcassing tk.Frame
         NumAling.config(font=('helvetica', 10 + numfont))
         self.canvas.create_window(200, 270, window=NumAling)
 
-        tittleNW = tk.Label(self, text='ALineacion: ')
+        tittleNW = tk.Label(self, text='Num cadena: ')
         tittleNW.config(font=('helvetica', 10 + numfont))
         self.canvas.create_window(300, 250, window=tittleNW)
 
@@ -311,18 +303,24 @@ class PageThree(tk.Frame):  # Sub-lcassing tk.Frame
             self.canvas.create_window(420, 270, window=ALI)
 
         def get_sequnces():
-            seq1 = '-' + entry1.get()
-            seq2 = '-' + entry2.get()
+            seq1 = entry1.get()
 
-            sw = SmithWaterman()
-            m, n = sw.run_SW(seq1, seq2)
+            a = startAlingment()
+            score,center,c = a.run_start(seq1)
 
-            Score = tk.Label(self, text=m, font=('helvetica', 10, 'bold'))
+            Score = tk.Label(self, text=score, font=('helvetica', 15, 'bold'))
             self.canvas.create_window(85, 270, window=Score)
 
-            NumAling = tk.Label(self, text=n[0][0], font=('helvetica', 10, 'bold'))
+            NumAling = tk.Label(
+                self, text=center, font=('helvetica', 10, 'bold'))
             self.canvas.create_window(200, 270, window=NumAling)
             show_alineamientos()
+
+            tittleNW = tk.Label(self, text=c+1)
+            tittleNW.config(font=('helvetica', 12 + numfont))
+            self.canvas.create_window(300, 270, window=tittleNW)
+
+
 
         button1 = tk.Button(text='Run', command=get_sequnces,
                                 bg='brown', fg='white', font=('helvetica', 9, 'bold'))

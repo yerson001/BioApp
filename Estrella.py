@@ -49,11 +49,12 @@ class startAlingment:
                 j = j - 1
         return (align_X, align_Y, A[len(y)][len(x)])
 
-    def get_input(self):
+    def get_input(self,str):
         sequences = []
-        n = int(input())
-        for i in range(n):
-            sequences.append(input())
+        #n = int(input())
+        sq = str.split(",")
+        for i in range(len(sq)):
+            sequences.append(sq[i])
         return sequences
 
     def get_center(self, sequences):
@@ -152,7 +153,7 @@ class startAlingment:
                         score -= 1
         return score
 
-    def order_results(self, aligneds, center_seq, center):
+    def order_results(self, aligneds, center_seq, center,sequences):
         i = 0
         j = 0
         results = []
@@ -166,7 +167,7 @@ class startAlingment:
                 j += 1
         return results
 
-    def block_optimization(self, results, score):
+    def block_optimization(self, results, score,sequences):
         continue_bit = True
 
         while continue_bit:
@@ -212,7 +213,7 @@ class startAlingment:
                 # print(block)
                 # print(aligneds)
                 # print(alignments)
-                res = self.order_results(aligneds, center_seq, center)
+                res = self.order_results(aligneds, center_seq, center,sequences)
 
                 index = seq_blocks.index(block)
                 # print(res)
@@ -334,6 +335,20 @@ class startAlingment:
         score = matriz[n - 1][m - 1]
         return score
 
+    def score_start(self,l):
+        m_ = len(l[0])
+        n_ = len(l)
+        max_ = 0
+        for i in range(m_):
+            sum = 0
+            for j in range(n_):
+                sum += l[i][j]
+            if sum > max_:
+                max_ = sum
+        #print(max_)
+        return max_
+
+
     def get_score_matriz(self, sequence):
         matriz = np.zeros((len(sequence), len(sequence)), int)
         for i in range(0, len(sequence)):
@@ -344,61 +359,48 @@ class startAlingment:
                     matriz[i][j] = self.get_score(sequence[i], sequence[j])
         return matriz
 
-    def save(matriz, score_, result, str_):
 
-        np.savetxt('save.txt', matriz, fmt='%.0f')
-        file1 = open("save.txt", "a")
-        file1.write("\n")
-        file1.writelines("S" + str(score_ + 1) + ": " + str(str_))
-        file1.write(" \n")
-        file1.write(" \n")
-        for i in (result):
-            file1.writelines(str(i))
-            file1.write("\n")
-        file1.write(" ")
-        file1.write(" \n")
-        file1.close()
+    def run_start(self,str):
+        a = startAlingment()
 
-    def run_start(self):
-        print("number of sequences: ")
-        sequences = self.get_input()
+        #str = "ATTGCCATT,ATGGCCATT,ATCCAATTTT,ATCTTCTT,ACTGACC"
+
+        sequences = self.get_input(str)
+
         matriz = self.get_score_matriz(sequences)
         center, alignments, max_ = self.get_center(sequences)
         aligneds, center_seq = self.msa(alignments)
-        results = self.order_results(aligneds, center_seq, center)
-        print(self.calculate_scores(results))
-        results, score = a.block_optimization(results, self.calculate_scores(results))
+        results = self.order_results(aligneds, center_seq, center, sequences)
 
-        print(a.get_score_matriz(sequences))
-        print(score)
-        print("center --> S" + str(center + 1), ": ", sequences[center])
+        results, score = a.block_optimization(results, self.calculate_scores(results), sequences)
 
-        print("-------result-----")
-        for i in results:
-            print(i)
+        #print(self.get_score_matriz(sequences))
+        #print(self.score_start(self.get_score_matriz(sequences)))
+        #print(score)
+        #print(sequences[center])
+        # print("center --> S" + str(center + 1), ": ", sequences[center])
+
+        #print("-------result-----")
+        #for i in results:
+        #    print(i)
+        return self.score_start(self.get_score_matriz(sequences)),sequences[center],center
+
+a = startAlingment()
+x,y,c = a.run_start("ATTGCCATT,ATGGCCATT,ATCCAATTTT,ATCTTCTT,ACTGACC")
 
 
-import time
+#print(y)
 
-if __name__ == '__main__':
 
-    a = startAlingment()
 
-    str = "ACG,GCA,ACC"
 
-    print("number of sequences: ")
-    sequences = a.get_input()
-    matriz = a.get_score_matriz(sequences)
-    center, alignments, max_ = a.get_center(sequences)
-    aligneds, center_seq = a.msa(alignments)
-    results = a.order_results(aligneds, center_seq, center)
-    print(a.calculate_scores(results))
-    results, score = a.block_optimization(results, a.calculate_scores(results))
 
-    print(a.get_score_matriz(sequences))
-    print(score)
-    print("center --> S" + str(center + 1), ": ", sequences[center])
 
-    print("-------result-----")
-    for i in results:
-        print(i)
+
+
+
+
+
+
+
+
