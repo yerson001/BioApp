@@ -7,6 +7,8 @@ h = graphviz.Digraph('H', filename='hello.gv')
 G = nx.DiGraph()
 
 
+caminos = []
+
 class NeedlemanWunsch:
     def __init__(self):
         self.score = 0
@@ -139,6 +141,9 @@ class NeedlemanWunsch:
                 else:
                     lista_temp += '-'
 
+            print("lista temp", lista_temp)
+            print("cadena temp", cadena_temp)
+
             lista2.append(lista_temp[::-1])
             # lista2.append("|")
             temp_indice = len(cadena_temp) - 1
@@ -162,6 +167,8 @@ class NeedlemanWunsch:
 
     def get_alignments(self, lista_graph, matriz):
         lista_alineamientos = []
+        indicesi = []
+        indicesj = []
         for i in range(len(lista_graph)):
             # lista_alineamientos_temp1 = []
             lista_alineamientos_temp = []
@@ -170,10 +177,13 @@ class NeedlemanWunsch:
                 indicei = tup1[0]
                 indicej = tup1[1]
                 # obtenemos el valor indice = M[i][j]
+                indicesi.append(indicei)
+                indicesj.append(indicej)
+                
                 indice = matriz[indicei][indicej]
                 lista_alineamientos_temp.append(indice)
             lista_alineamientos.append(lista_alineamientos_temp)
-        return lista_alineamientos
+        return lista_alineamientos, indicesi, indicesj
 
     def run(self, str1, str2):
         lista_caminos = []
@@ -199,7 +209,8 @@ class NeedlemanWunsch:
             lista_caminos.append(lista_temp4)
         # #----------------------------------------
         lista_graph = self.follow_path(lista_caminos, m, n)
-        lista_alineamientos = self.get_alignments(lista_graph, matriz)
+        lista_alineamientos,inx,iny = self.get_alignments(lista_graph, matriz)
+        print("lista alineamientos", lista_alineamientos)
         alignments = []
         lista2 = []
         cadena_temp = str2[1:]
@@ -216,14 +227,15 @@ class NeedlemanWunsch:
         #print(alignments)
         #print(letters)
 
-        return score,len(lista_alineamientos),alignments,letters
+        return score,len(lista_alineamientos),alignments,letters,matriz,inx,iny
+
 
 
 if __name__ == '__main__':
     seq1 = '-' + 'AGC'
     seq2 = '-' + 'AAAC'
     nw = NeedlemanWunsch()
-    score,num,n,m = nw.run(seq1, seq2)
+    score,num,n,m,matriz,inx,iny = nw.run(seq1, seq2)
 
     print(score, "\n",num,"\n",n,"\n",m)
 
@@ -232,3 +244,9 @@ if __name__ == '__main__':
     print(len(n[0]))
 
     print(len(n))
+    print(matriz)
+    print(inx)
+    print(iny)
+
+
+
