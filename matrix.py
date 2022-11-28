@@ -1,6 +1,5 @@
 import tkinter as tk
-from Global import NeedlemanWunsch
-
+import random
 AdjustPositionx = 0
 AdjustPositiony = -30
 
@@ -60,35 +59,92 @@ Alingmts = tk.Label(root, text=':-)')
 Alingmts.config(font=('helvetica', 10+numfont))
 canvas1.create_window(300, 270, window=Alingmts)
 
-def ShowAligments(n,m,space):
-    space_ = space
+def fill_divider(n):
+    divider = []
     for i in range(len(n)):
+        divider.append('|')
         for j in range(len(n[0])):
-            space_+=space
-            ALI = tk.Label(canvas1, text=n[i][j], bg="gray51", fg="red")
-            ALI.config(font=('helvetica', 10))
-            canvas1.create_window(300+space_, 270, window=ALI)
-    ALI = tk.Label(canvas1, text="|", bg="gray51", fg="blue")
-    ALI.config(font=('helvetica', 10))
-    canvas1.create_window(space_, 270, window=ALI)
+            divider.append(n[i][j])
+        divider.append('|')
+    return divider
 
+def random_color():
+    colors = ['red2', 'green2', 'gold', 'yellow', 'orange', 'cyan', 'maroon1']
+    r = lambda: random.randint(0,len(colors)-1)
+    return colors[r()]
+
+def ShowAligments(n,m,space,posx=300,posy=270):
+    space_ = space
+    pace_ = space
+    for i in range(len(n)):
+        space_+=space
+        rbg = random_color()
+        rfg = "black"
+        if n[i] == '|':
+            rbg = 'blue2'
+            rfg = 'blue2'
+        ALI = tk.Label(canvas1, text=n[i], bg=rbg, fg=rfg)
+        ALI.config(font=('helvetica', 10))
+        canvas1.create_window(posx+space_, posy, window=ALI)
+
+        pace_+=space
+        ALI = tk.Label(canvas1, text=m[i], bg=rbg, fg=rfg)
+        ALI.config(font=('helvetica', 10))
+        canvas1.create_window(posx+pace_, posy + 18, window=ALI)
+
+def show_matrix(matrix, seq1, seq2, inx,iny,posx=300, posy=270):
+    space_ = 20
+    spacey = posy
+    spacex = posx
+    for i in range(len(seq1)):
+        space_ +=20
+        ALI = tk.Label(canvas1, text=seq1[i], bg="gray", fg='black')
+        ALI.config(font=('helvetica', 10))
+        canvas1.create_window(posx+space_, posy-20, window=ALI)
+    space_1 =0
+    for i in range(len(seq2)):
+        space_1 +=20
+        ALI = tk.Label(canvas1, text=seq2[i], bg="gray", fg='black')
+        ALI.config(font=('helvetica', 10))
+        canvas1.create_window(posx+20, posy+space_1-20, window=ALI)
+
+    space_ = 20
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            space_+=20
+            rgb = "white"
+            if matrix[i] == inx[j] and j == iny[j]:
+                rbg = 'yellow'
+            ALI = tk.Label(canvas1, text=matrix[i][j], bg=rgb, fg="black")
+            ALI.config(font=('helvetica', 10))
+            canvas1.create_window(spacex+space_, spacey, window=ALI)
+        spacey+=20
+        space_ = 20
 
 
 def get_sequnces():
-    seq1 = '-' + entry1.get()
-    seq2 = '-' + entry2.get()
-    nw = NeedlemanWunsch()
-    score_, num,n, m = nw.run(seq1, seq2)
-    print(n," -> ",len(n),"  -> ",len(n[0]),"\n")
+    seq1 = '-' + "AGC"
+    seq2 = '-' + "AAAC" 
+    print(len(seq1), len(seq2))
 
 
-    Score = tk.Label(root, text=score_, font=('helvetica', 10, 'bold'))
+    Score = tk.Label(root, text="3", font=('helvetica', 10, 'bold'))
     canvas1.create_window(85, 270, window=Score)
 
-    NumAling = tk.Label(root, text=num, font=('helvetica', 10, 'bold'))
+    NumAling = tk.Label(root, text="gg", font=('helvetica', 10, 'bold'))
     canvas1.create_window(200, 270, window=NumAling)
 
-    ShowAligments(n,m,20)
+    matrix = [[ 0, -2, -4, -6],
+            [-2 , 1, -1, -3],
+            [-4, -1 , 0 ,-2],
+            [-6, -3, -2, -1],
+            [-8 ,-5 ,-4 ,-1]]
+    inx = [4, 3, 2, 1, 0, 4, 3, 2, 1, 0, 4, 3, 2, 1, 0]
+    iny = [3, 2, 1, 0, 0, 3, 2, 1, 1, 0, 3, 2, 2, 1, 0]
+
+
+    ShowAligments(fill_divider(['ABC','KKI']),fill_divider(['AAB','CFD']),20,300,270)
+    show_matrix(matrix,seq1, seq2,inx,iny, 400, 150)
 
 
 button1 = tk.Button(text='Run', command=get_sequnces, bg='brown', fg='white', font=('helvetica', 9, 'bold'))
